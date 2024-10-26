@@ -1,0 +1,4 @@
+(executable
+ (public_name hackathon_cli)
+ (name main)
+ (libraries hackathon_cli h2))

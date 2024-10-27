@@ -1,5 +1,3 @@
-open Option
-
 type chat_conf = {
     address: string;
     query: string;
@@ -16,7 +14,7 @@ type upload_conf = {
     files: string list;
 }
 
-type config_type =
+type config =
     | Chat of chat_conf
     | Search of search_conf
     | Upload of upload_conf

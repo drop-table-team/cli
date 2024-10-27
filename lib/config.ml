@@ -67,17 +67,17 @@ let get_address () =
         match List.find_opt (fun config -> fst config = "address") file_configs with
         | Some address_conf -> snd address_conf
         | None ->
-            let () = prerr_endline "Address must be passed as argument or specified in config file" in
+            let () = prerr_endline "address must be passed as argument or specified in config file" in
             exit 1
 
 let get_chat_address () = 
     match !chat_address with
     | Some address -> address
     | None ->
-        match List.find_opt (fun config -> fst config = "chat_address") file_configs with
+        match List.find_opt (fun config -> fst config = "chat-address") file_configs with
         | Some address_conf -> snd address_conf
         | None ->
-            let () = prerr_endline "Chat address must be passed as argument or specified in config file" in
+            let () = prerr_endline "chat-address must be passed as argument or specified in config file" in
             exit 1
 
 let err_with_help () =

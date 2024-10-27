@@ -7,7 +7,9 @@ let print_chat_response response =
     let () = print_endline response.text
     in if not @@ List.is_empty response.sources then
         let () = print_endline "\n--- Sources ---" in
-        List.iter (fun ref -> print_endline @@ "[" ^ (Int.to_string ref.id) ^ "] (" ^ ref.uuid ^ ") " ^ ref.title ^ ": " ^ ref.snippet) response.sources
+        List.iter
+            (fun ref -> Printf.printf "[%i] (%s) %s: %s" ref.id ref.uuid ref.title ref.snippet)
+            response.sources
 
 let print_document index (document: document) =
     let () = (index |> Int.to_string) ^ " (" ^ document.uuid ^ "): " ^ document.title |> print_endline
@@ -19,7 +21,7 @@ let print_document index (document: document) =
 let maybe_print_upload_result quiet result =
     if not quiet then
         let response = parse_json_upload result 
-        in let () = print_newline (); print_endline @@ "\t" ^ response.title
+        in let () = print_endline @@ "\n\t" ^ response.title
         and () = print_endline @@ "Summary: " ^ response.summary
         and () = print_endline @@ "Short summary: " ^ response.short_summary
         in print_endline @@ "Tags: " ^ List.(fold_left
@@ -40,10 +42,10 @@ let () =
         post
             ~headers:[("Content-Type", "application/json")]
             (args.address ^ "/query")
-            (create_search_json args.query args.tags)
+            @@ create_search_json args.query args.tags
         |> Lwt_main.run |> parse_json_documents
         |> List.iteri print_document
     | Upload args ->
         args.files |> List.iter (fun file ->
-            upload_file args.address file args.modules |> Lwt_main.run |>
-            maybe_print_upload_result args.quiet)
+            upload_file args.address file args.modules |> Lwt_main.run
+            |> maybe_print_upload_result args.quiet)

@@ -29,7 +29,7 @@ let add_chat_addr address_in =
     match !chat_address with
     | None -> chat_address := Some address_in
     | Some address -> 
-        Printf.eprintf "Two definitions of --address: \"%s\" and \"%s\"\n" address address_in;
+        Printf.eprintf "Two definitions of --chat-address: \"%s\" and \"%s\"\n" address address_in;
         exit 1
 
 let speclist = [

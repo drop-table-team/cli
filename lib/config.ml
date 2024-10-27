@@ -16,7 +16,7 @@ let file_configs =
             |> (fun l -> List.(hd l, nth l 1)))
     with Sys_error _ -> []
 
-let usage_msg = "hackathon_cli {chat|search|upload} [--address] [--tag] {<query>|<file> ...}"
+let usage_msg = "hackathon_cli {chat|search|upload} [--address] [--chat-address] [--tag] [--quiet] {<query>|<file> ...}"
 
 let add_addr address_in =
     match !address with

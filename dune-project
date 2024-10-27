@@ -2,7 +2,7 @@
 
 (name hackathon_cli)
 
-(generate_opam_files false)
+(generate_opam_files true)
 
 (source
  (github drop-table-team/cli))

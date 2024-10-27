@@ -1,2 +1,3 @@
 (library
- (name hackathon_cli))
+ (name hackathon_cli)
+ (libraries str yojson))

@@ -1,4 +1,4 @@
 (executable
  (public_name hackathon_cli)
  (name main)
- (libraries hackathon_cli h2))
+ (libraries cohttp-lwt-unix hackathon_cli yojson))

@@ -5,11 +5,11 @@ open Cohttp_lwt_unix
 open Types
 
 let get_modules address =
-    let response = Client.get ("http://" ^ address ^ "/modules/input" |> Uri.of_string)
+    let response = "http://" ^ address ^ "/modules/input" |> Uri.of_string |> Client.get
         >>= fun (_, body) -> Cohttp_lwt.Body.to_string body
     in Lwt_main.run response |> Json_parsers.parse_modules
 
-let boundary = "LOLOLOL69696969696969420"
+let boundary = "boun..LOLOLOL69696969696969420..dary"
 
 let rec tags_to_string tags =
     match tags with
@@ -43,6 +43,7 @@ let get_content_type filename =
     | ".jpeg" -> "image/jpeg"
     | ".png" -> "image/png"
     | ".pdf" -> "application/pdf"
+    | ".wav" -> "audio/wav"
     | _ -> "text/plain"
 
 let create_upload_body filename =

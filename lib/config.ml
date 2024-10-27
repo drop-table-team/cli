@@ -2,6 +2,7 @@ open Types
 
 let action  = ref None
 let address = ref None
+let chat_address = ref None
 let files = ref []
 let query = ref None
 let quiet = ref false
@@ -24,8 +25,16 @@ let add_addr address_in =
         Printf.eprintf "Two definitions of --address: \"%s\" and \"%s\"\n" address address_in;
         exit 1
 
+let add_chat_addr address_in =
+    match !chat_address with
+    | None -> chat_address := Some address_in
+    | Some address -> 
+        Printf.eprintf "Two definitions of --address: \"%s\" and \"%s\"\n" address address_in;
+        exit 1
+
 let speclist = [
     ("--address", Arg.String add_addr, "endpoint address");
+    ("--chat-address", Arg.String add_chat_addr, "chat server address");
     ("--tag", Arg.String (fun tag -> tags := tag :: !tags), "tag to narrow search (multiple allowed)");
     ("--quiet", Arg.Set quiet, "suppress response when uploading");
 ]
@@ -61,8 +70,15 @@ let get_address () =
             let () = prerr_endline "Address must be passed as argument or specified in config file" in
             exit 1
 
-let get_module_server_address () =
-    List.find (fun config -> fst config = "module_server_address") file_configs |> snd
+let get_chat_address () = 
+    match !chat_address with
+    | Some address -> address
+    | None ->
+        match List.find_opt (fun config -> fst config = "chat_address") file_configs with
+        | Some address_conf -> snd address_conf
+        | None ->
+            let () = prerr_endline "Chat address must be passed as argument or specified in config file" in
+            exit 1
 
 let err_with_help () =
     Arg.usage speclist usage_msg;
@@ -70,9 +86,9 @@ let err_with_help () =
 
 let get () =
     Arg.parse speclist anon_fun usage_msg;
-    let address = get_address () in
     match !action with
     | Some ChatAction -> (
+        let address = get_chat_address () in
         match !query with
         | Some query ->
             Chat {
@@ -82,6 +98,7 @@ let get () =
         | None -> err_with_help ()
     )
     | Some SearchAction -> (
+        let address = get_chat_address () in
         match !query with
         | Some query ->
             Search {
@@ -92,10 +109,11 @@ let get () =
         | _ -> err_with_help ()
     )
     | Some UploadAction -> (
+        let address = get_address () in
         match !files with
         | [] -> err_with_help ()
         | files -> 
-            let modules = get_module_server_address () |> Server_comm.get_modules in
+            let modules = Server_comm.get_modules address in
             Upload {
                 address;
                 files;

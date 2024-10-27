@@ -17,16 +17,17 @@ let parse_json_documents response_text =
             | `Assoc document -> document
             | _ -> invalid_res_err ()
         in let title = get_json_entry document "title"
-        and summary = get_json_entry document "summary"
+        and summary = get_json_entry document "short"
+        and uuid = get_json_entry document "uuid"
         and tags = get_json_entry document "tags"
-        in match (title, summary, tags) with
-        | (`String title, `String summary, `List tags) ->
+        in match (title, uuid, summary, tags) with
+        | (`String title, `String uuid, `String summary, `List tags) ->
             let tags = List.map (fun tag ->
                 match tag with
                 | `String tag -> tag
                 | _ -> invalid_res_err ()
             ) tags in
-            {title; summary; tags}
+            {title; uuid; summary; tags}
         | _ -> invalid_res_err ()
     ) documents
 

@@ -19,7 +19,7 @@
 				};
 				packages.default = pkgs.ocamlPackages.buildDunePackage {
 					pname = "hackathon_cli";
-					version = "0.1.0";
+					version = "1.0.0";
 					duneVersion = "3";
 					src = self;
 					strictDeps = true;

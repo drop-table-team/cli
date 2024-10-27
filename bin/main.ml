@@ -10,19 +10,22 @@ let print_chat_response response =
         List.iter (fun ref -> print_endline @@ "[" ^ (Int.to_string ref.id) ^ "] (" ^ ref.uuid ^ ") " ^ ref.title ^ ": " ^ ref.snippet) response.sources
 
 let print_document index (document: document) =
-    let () = (index+1 |> Int.to_string) ^ ": " ^ document.title |> print_endline
+    let () = (index |> Int.to_string) ^ " (" ^ document.uuid ^ "): " ^ document.title |> print_endline
     and () = if not @@ List.is_empty document.tags then
-        let () = List.hd document.tags |> print_endline in
-        List.tl document.tags |> List.iter (fun tag -> "; " ^ tag |> print_endline)
-    in print_endline document.summary
+        let () = List.hd document.tags |> print_string in
+        List.tl document.tags |> List.iter (fun tag -> "; \n" ^ tag |> print_string)
+    in print_endline @@ "\n" ^ document.summary ^ "\n"
 
 let maybe_print_upload_result quiet result =
     if not quiet then
         let response = parse_json_upload result 
-        in let () = print_endline response.title
+        in let () = print_newline (); print_endline @@ "\t" ^ response.title
         and () = print_endline @@ "Summary: " ^ response.summary
         and () = print_endline @@ "Short summary: " ^ response.short_summary
-        in print_endline @@ "Tags: " ^ List.(fold_left (fun acc next -> acc ^ ", \"" ^ next ^ "\"") ("\"" ^ hd response.tags ^ "\"") (tl response.tags))
+        in print_endline @@ "Tags: " ^ List.(fold_left
+            (fun acc next -> acc ^ ", \"" ^ next ^ "\"")
+            ("\"" ^ hd response.tags ^ "\"")
+            (tl response.tags))
 
 let () =
     let args = Config.get () in

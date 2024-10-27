@@ -19,6 +19,7 @@ type document = {
     title: string;
     summary: string;
     tags: string list;
+    uuid: string;
 }
 
 type upload_result = {

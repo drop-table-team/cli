@@ -1,3 +1,3 @@
 (library
  (name hackathon_cli)
- (libraries str yojson))
+ (libraries cohttp-lwt-unix str yojson))

@@ -1,19 +1,9 @@
-type source = {
-    id: int;
-    title: string;
-}
-
-type chat_response = {
-    text: string;
-    sources: source list;
-}
-
-type document = {
-    title: string;
-    summary: string;
-    tags: string list;
-}
+open Types
 
 val parse_json_chat : string -> chat_response
 
 val parse_json_documents : string -> document list
+
+val parse_modules : string -> modules list
+
+val parse_json_upload : string -> upload_result
